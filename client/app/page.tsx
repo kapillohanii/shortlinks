@@ -89,7 +89,7 @@ export default function Home() {
             </button>
           </form>
           <p className="text-gray-800">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link legacyBehavior href="/register">
               <a className="text-blue-500">Register here</a>
             </Link>
