@@ -60,7 +60,7 @@ export default function DashboardLayout({ children }) {
   };
 
   return (
-    <>
+    <div className="w-full h-full">
       {isLoading && <Loader />}
       <div className="h-full w-full relative bg-gray-200 p-2">
         <aside className="absolute w-full sm:w-[200px] top-0 left-0 h-[60px] sm:h-full border-b sm:border-r border-black/10">
@@ -88,6 +88,6 @@ export default function DashboardLayout({ children }) {
           <div className="h-[calc(100vh-120px)]">{children}</div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

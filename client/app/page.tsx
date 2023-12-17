@@ -72,7 +72,7 @@ export default function Home() {
   };
 
   return (
-    <>{isLoading && <Loader />}
+    <div className='h-full w-full'>{isLoading && <Loader />}
     <div>
       <div className="min-h-screen flex items-center justify-center bg-gray-300">
         <div className="bg-gray-200 p-8 rounded shadow-md w-full max-w-md">
@@ -121,6 +121,6 @@ export default function Home() {
         </div>
       </div>
     </div>
-    </>
+    </div>
   );
 }

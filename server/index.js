@@ -10,7 +10,24 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 const uri = process.env.URI;
+const redis = require("redis");
+const RedisStore = require("connect-redis").default;
 
+const redisClient = redis.createClient({
+  password: process.env.REDIS_PASSWORD,
+  socket: {
+      host: process.env.REDIS_ENDPOINT,
+      port: process.env.REDIS_PORT
+  }
+});
+
+redisClient.connect().catch(console.error);
+
+
+
+let redisStore = new RedisStore({
+    client: redisClient,
+});
 
 mongoose.connect(uri, {});
 const connection = mongoose.connection;
@@ -26,7 +43,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({ secret: process.env.SECRET_KEY, resave: false, saveUninitialized: false }));
+app.use(session({ store: redisStore, secret: process.env.SECRET_KEY, resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 

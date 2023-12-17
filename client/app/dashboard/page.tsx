@@ -17,6 +17,7 @@ interface Link {
 const Dashboard = () => {
   const [user, setUser] = useState({});
   const [links, setLinks] = useState<Link[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,9 +31,9 @@ const Dashboard = () => {
         setLinks(data.links);
       })
       .catch((error) => console.error('Error fetching short links:', error));
-  },);
+  },[isLoading]);
   const delay = (s) => new Promise(resolve => setTimeout(resolve, s));
-  const [isLoading, setIsLoading] = useState(false);
+  
 
   useEffect(() => {
     Router.events.on("routeChangeStart", (url)=>{
