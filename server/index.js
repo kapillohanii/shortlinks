@@ -47,7 +47,7 @@ app.use(session({
   store: redisStore,
   secret: process.env.SECRET_KEY, resave: false, saveUninitialized: false,
   cookie: {
-    sameSite: 'Lax', // Allow cross-site cookies
+    sameSite: 'None', // Allow cross-site cookies
     secure: true, // Ensure cookies are sent only over HTTPS
   }
 }));
