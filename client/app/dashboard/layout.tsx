@@ -2,10 +2,29 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Router from "next/router";
+import Loader from "../components/Loading";
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
   const [username, setUsername] = useState("");
+  const delay = (s) => new Promise(resolve => setTimeout(resolve, s));
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    Router.events.on("routeChangeStart", (url)=>{
+      setIsLoading(true)
+    });
+
+    Router.events.on("routeChangeComplete", (url)=>{
+      setIsLoading(false)
+    });
+
+    Router.events.on("routeChangeError", (url) =>{
+      setIsLoading(false)
+    });
+
+  }, [Router])
 
   useEffect(() => {
     // Fetch the username from localStorage on the client side
@@ -16,6 +35,8 @@ export default function DashboardLayout({ children }) {
   const handleLogout = async () => {
     try {
       // Send a request to the server to log the user out
+      setIsLoading(true);
+      await delay(1000);
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/logout`, {
         method: "GET",
         headers: {
@@ -34,11 +55,13 @@ export default function DashboardLayout({ children }) {
         console.error("Logout failed");
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("Error during logout:", error);
     }
   };
 
   return (
+    <>{isLoading && <Loader />}
     <div className="h-full w-full relative bg-gray-200 p-2">
       <aside className="absolute w-[200px] top-0 left-0 h-full border-r border-black/10">
         <Link href="/dashboard">
@@ -61,5 +84,6 @@ export default function DashboardLayout({ children }) {
         <div className="h-[calc(100vh-60px)]">{children}</div>
       </div>
     </div>
+    </>
   );
 }

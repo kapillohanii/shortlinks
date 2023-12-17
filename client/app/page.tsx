@@ -1,7 +1,9 @@
 "use client"
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Router from 'next/router';
+import Loader from './components/Loading';
 
 const apiURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -11,6 +13,23 @@ export default function Home() {
     username: '',
     password: '',
   });
+  const delay = (s) => new Promise(resolve => setTimeout(resolve, s));
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    Router.events.on("routeChangeStart", (url)=>{
+      setIsLoading(true)
+    });
+
+    Router.events.on("routeChangeComplete", (url)=>{
+      setIsLoading(false)
+    });
+
+    Router.events.on("routeChangeError", (url) =>{
+      setIsLoading(false)
+    });
+
+  }, [Router])
 
   const handleChange = (e) => {
     setFormData({
@@ -24,6 +43,8 @@ export default function Home() {
 
     try {
       // Send POST Request to Server
+      setIsLoading(true);
+      await delay(2000)
       const response = await fetch(`${apiURL}/users/login`, {
         method: 'POST',
         headers: {
@@ -44,11 +65,13 @@ export default function Home() {
         alert(`Login failed: ${errorData.message}`);
       }
     } catch (error) {
+      setIsLoading(false);
       console.error('Error during login:', error);
     }
   };
 
   return (
+    <>{isLoading && <Loader />}
     <div>
       <div className="min-h-screen flex items-center justify-center bg-gray-300">
         <div className="bg-gray-200 p-8 rounded shadow-md w-full max-w-md">
@@ -97,5 +120,6 @@ export default function Home() {
         </div>
       </div>
     </div>
+    </>
   );
 }

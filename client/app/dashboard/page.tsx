@@ -5,7 +5,8 @@ import CreateLink from '../components/CreateLink';
 import DeleteButton from '../components/DeleteButton';
 import moment from 'moment-timezone';  // Import moment from moment-timezone
 import { useRouter } from 'next/navigation';
-
+import Router from 'next/router';
+import Loader from '../components/Loading';
 interface Link {
   token: string;
   originalURL: string;
@@ -30,9 +31,27 @@ const Dashboard = () => {
       })
       .catch((error) => console.error('Error fetching short links:', error));
   },);
+  const delay = (s) => new Promise(resolve => setTimeout(resolve, s));
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    Router.events.on("routeChangeStart", (url)=>{
+      setIsLoading(true)
+    });
+
+    Router.events.on("routeChangeComplete", (url)=>{
+      setIsLoading(false)
+    });
+
+    Router.events.on("routeChangeError", (url) =>{
+      setIsLoading(false)
+    });
+
+  }, [Router])
 
   const handleCreateLink = async (originalURL: string, customToken?: string) => {
     try {
+      setIsLoading(true);
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shortlinks/shorten`, {
         method: 'POST',
         headers: {
@@ -51,14 +70,19 @@ const Dashboard = () => {
       console.error('Error creating short link:', error);
       alert('Error creating short link');
     }
+    setIsLoading(false);
   };
 
   const handleDelete = async () => {
     // Refresh the page after deleting a link
+    setIsLoading(true);
+    await delay(500);
+    setIsLoading(false);
     await router.refresh();
   };
 
   return (
+    <>{isLoading && <Loader />}
     <div className='m-2'>
       <CreateLink onCreate={handleCreateLink} />
       <h1 className='text-2xl font-bold mb-4 text-gray-800'>Dashboard</h1>
@@ -66,7 +90,7 @@ const Dashboard = () => {
         {links.map((link) => (
           <div
             key={link.token}
-            className='bg-white p-4 rounded shadow-md hover:shadow-lg transition duration-300 relative'
+            className='bg-gray-100 p-4 rounded shadow-md hover:shadow-lg transition duration-300 relative'
           >
             <p className='text-gray-700 mb-2'>Token: {link.token}</p>
             <p className='text-gray-700 mb-2'>
@@ -95,6 +119,7 @@ const Dashboard = () => {
         ))}
       </div>
     </div>
+    </>
   );
 };
 
