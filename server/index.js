@@ -16,8 +16,8 @@ const RedisStore = require("connect-redis").default;
 const redisClient = redis.createClient({
   password: process.env.REDIS_PASSWORD,
   socket: {
-      host: process.env.REDIS_ENDPOINT,
-      port: process.env.REDIS_PORT
+    host: process.env.REDIS_ENDPOINT,
+    port: process.env.REDIS_PORT
   }
 });
 
@@ -26,7 +26,7 @@ redisClient.connect().catch(console.error);
 
 
 let redisStore = new RedisStore({
-    client: redisClient,
+  client: redisClient,
 });
 
 mongoose.connect(uri, {});
@@ -43,7 +43,14 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({ store: redisStore, secret: process.env.SECRET_KEY, resave: false, saveUninitialized: false }));
+app.use(session({
+  store: redisStore,
+  secret: process.env.SECRET_KEY, resave: false, saveUninitialized: false,
+  cookie: {
+    sameSite: 'None', // Allow cross-site cookies
+    secure: true, // Ensure cookies are sent only over HTTPS
+  }
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -57,5 +64,5 @@ app.use('/users', usersRouter);
 app.use('/shortlinks', shortLinksRouter);
 app.use(isAuthenticated);
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
