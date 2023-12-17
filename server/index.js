@@ -48,7 +48,7 @@ app.use(session({
   secret: process.env.SECRET_KEY, resave: false, saveUninitialized: false,
   cookie: {
     sameSite: 'None', // Allow cross-site cookies
-    secure: false, // Ensure cookies are sent only over HTTPS
+    secure: true, // Ensure cookies are sent only over HTTPS
   }
 }));
 app.use(passport.initialize());
