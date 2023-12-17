@@ -65,7 +65,7 @@ export default function DashboardLayout({ children }) {
       <div className="h-full w-full relative bg-gray-200 p-2">
         <aside className="absolute w-full sm:w-[200px] top-0 left-0 h-[60px] sm:h-full border-b sm:border-r border-black/10">
           <Link href="/dashboard">
-            <h1 className="text-5xl sm:text-5xl text-blue-950 mb-4 font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-emerald-800 from-sky-400">
+            <h1 className="text-5xl sm:text-5xl text-blue-950 mb-4 font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-emerald-800 from-sky-400 m-1">
               Short Links
             </h1>
           </Link>
@@ -79,7 +79,7 @@ export default function DashboardLayout({ children }) {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 mb-2"
+                className="border border-blue-500 text-blue-500 py-2 px-4 rounded hover:bg-gray-300 mb-2"
               >
                 Log Out
               </button>

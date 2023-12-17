@@ -22,18 +22,18 @@ const CreateLink: React.FC<{ onCreate: (originalURL: string, customToken?: strin
           placeholder="Enter the original URL*"
           value={originalURL}
           onChange={(e) => setOriginalURL(e.target.value)}
-          className="text-black border rounded-l py-2 px-3 w-full"
+          className="bg-gray-100 text-black border rounded-lg py-2 px-3 w-full"
         />
         <input
           type="text"
           placeholder="custom token"
           value={customToken}
           onChange={(e) => setCustomToken(e.target.value)}
-          className="text-black border rounded-r py-2 px-3 w-full"
+          className="bg-gray-100 text-black border rounded-lg py-2 px-3 w-full"
         />
         <button
           onClick={handleCreate}
-          className="bg-blue-500 text-white py-2 px-4 rounded-r hover:bg-blue-700"
+          className="border border-green-500 text-green-500 py-2 px-4 rounded-lg hover:bg-gray-300"
         >
           Create
         </button>

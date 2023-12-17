@@ -76,6 +76,7 @@ router.post('/register', async (req, res) => {
             }
 
             // Send a response to the frontend indicating successful registration
+            req.session.save();
             res.status(201).json({ message: 'Registration successful', user: { username } });
         });
     } catch (error) {

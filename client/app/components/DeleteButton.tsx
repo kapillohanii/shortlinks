@@ -31,7 +31,7 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({ token, onDelete }) => {
     <button
       type="button"
       onClick={handleDelete}
-      className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-700"
+      className="text-red-500 py-1 px-2 rounded hover:bg-gray-300 border border-red-500"
     >
       Delete
     </button>

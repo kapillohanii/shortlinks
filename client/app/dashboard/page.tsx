@@ -20,28 +20,32 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-useEffect(() => {
-  fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shortlinks/dashboard`, {
-    method: 'GET',
-    credentials: 'include',
-  })
-    .then((response) => {
-      if (!response.ok) {
-        console.log(response);
-        throw new Error(`HTTP error! Status: ${response.status}`);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shortlinks/dashboard`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+  
+        if (!response.ok) {
+          console.log(response);
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
+        const data = await response.json();
+        setUser(data.user);
+        setLinks(data.links);
+      } catch (error) {
+        console.error('Error fetching short links:', error);
+        // Handle the error as needed, for example, you can set an error state
+        // setError(error.message);
       }
-      return response.json();
-    })
-    .then((data) => {
-      setUser(data.user);
-      setLinks(data.links);
-    })
-    .catch((error) => {
-      console.error('Error fetching short links:', error);
-      // Handle the error as needed, for example, you can set an error state
-      // setError(error.message);
-    });
-}, [isLoading]);
+    };
+  
+    fetchData();
+  }, [isLoading]);
+  
 
   const delay = (s) => new Promise(resolve => setTimeout(resolve, s));
   
@@ -98,11 +102,11 @@ useEffect(() => {
     <div className='m-2'>
       <CreateLink onCreate={handleCreateLink} />
       <h1 className='text-2xl font-bold mb-4 text-gray-800'>Dashboard</h1>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
         {links.map((link) => (
           <div
             key={link.token}
-            className='bg-gray-100 p-4 rounded shadow-md hover:shadow-lg transition duration-300 relative'
+            className='p-4 rounded shadow-md hover:shadow-xl transition duration-400 relative border border-gray-400 rounded-lg'
           >
             <p className='text-gray-700 mb-2'>Token: {link.token}</p>
             <p className='text-gray-700 mb-2'>
