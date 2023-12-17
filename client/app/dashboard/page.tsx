@@ -25,13 +25,21 @@ const Dashboard = () => {
       method: 'GET',
       credentials: 'include',
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
         setUser(data.user);
         setLinks(data.links);
       })
-      .catch((error) => console.error('Error fetching short links:', error));
-  },[isLoading]);
+      .catch((error) => {
+        console.error('Error fetching short links:', error);
+      });
+  }, [isLoading]);
+  
   const delay = (s) => new Promise(resolve => setTimeout(resolve, s));
   
 
