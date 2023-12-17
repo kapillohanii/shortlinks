@@ -35,6 +35,7 @@ router.post('/login', (req, res, next) => {
         if (loginErr) {
           return next(loginErr);
         }
+        req.session.save();
         return res.status(200).json({ message: 'Login successful', user });
       });
     })(req, res, next);
