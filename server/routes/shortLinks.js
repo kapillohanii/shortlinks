@@ -15,7 +15,7 @@ router.get('/dashboard', async (req, res) => {
         }));
         return res.json({ user: req.user, links: linkAnalytics });
     } catch (error) {
-        console.error(error);
+        console.log(error);
         res.status(500).send(error);
     }
 });
