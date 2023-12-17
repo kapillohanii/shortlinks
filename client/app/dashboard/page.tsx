@@ -20,26 +20,29 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shortlinks/dashboard`, {
-      method: 'GET',
-      credentials: 'include',
+useEffect(() => {
+  fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shortlinks/dashboard`, {
+    method: 'GET',
+    credentials: 'include',
+  })
+    .then((response) => {
+      if (!response.ok) {
+        console.log(response);
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setUser(data.user);
-        setLinks(data.links);
-      })
-      .catch((error) => {
-        console.error('Error fetching short links:', error);
-      });
-  }, [isLoading]);
-  
+    .then((data) => {
+      setUser(data.user);
+      setLinks(data.links);
+    })
+    .catch((error) => {
+      console.error('Error fetching short links:', error);
+      // Handle the error as needed, for example, you can set an error state
+      // setError(error.message);
+    });
+}, [isLoading]);
+
   const delay = (s) => new Promise(resolve => setTimeout(resolve, s));
   
 

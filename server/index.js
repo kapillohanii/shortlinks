@@ -48,7 +48,7 @@ app.use(session({
   secret: process.env.SECRET_KEY, resave: false, saveUninitialized: false,
   cookie: {
     sameSite: 'None', // Allow cross-site cookies
-    secure: true, // Ensure cookies are sent only over HTTPS
+    secure: false, // Ensure cookies are sent only over HTTPS
   }
 }));
 app.use(passport.initialize());
@@ -56,13 +56,14 @@ app.use(passport.session());
 
 
 
-const shortLinksRouter = require('./routes/shortLinks');
 const usersRouter = require('./routes/users');
+const shortLinksRouter = require('./routes/shortLinks');
 
 
 app.use('/users', usersRouter);
-app.use('/shortlinks', shortLinksRouter);
 app.use(isAuthenticated);
+app.use('/shortlinks', shortLinksRouter);
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
