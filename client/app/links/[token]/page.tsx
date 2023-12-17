@@ -9,8 +9,9 @@ const TokenPage = (token) => {
   useEffect(() => {
     if (token) {
       // Fetch the original URL and update the click count from the server using the provided token
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shortlinks/shortlinks/${token.params.token}`, {
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shortlinks/links/${token.params.token}`, {
         method: 'GET', // Use GET to retrieve the original URL and update the click count
+        credentials: 'include'
       })
         .then((response) => {
           if (response.ok) {
@@ -20,9 +21,14 @@ const TokenPage = (token) => {
           }
         })
         .then((data) => {
-          setOriginalURL(data.originalURL);
+          let finalURL = data.originalURL;
+
+          const redirectURL = data.originalURL.startsWith('https://') ? data.originalURL : `https://${data.originalURL}`;
+
+          setOriginalURL(redirectURL);
+          
           // Redirect to the original URL
-          window.location.href = data.originalURL;
+          window.location.href = redirectURL;
           
           // Update click count by sending a POST request to the backend
           fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/shortlinks/updateClickCount/${token.params.token}`, {
@@ -30,6 +36,7 @@ const TokenPage = (token) => {
             headers: {
               'Content-Type': 'application/json',
             },
+            credentials: 'include',
           })
             .then((response) => {
               if (!response.ok) {
@@ -45,20 +52,11 @@ const TokenPage = (token) => {
           // Handle error, e.g., redirect to an error page
         });
     }
-  }, [token]);
+  },[token]);
 
   return (
     <div>
       <h1>Redirecting...</h1>
-      {/* Optional: Display the original URL if needed */}
-      {originalURL && (
-        <p>
-          Original URL: 
-          <a href={originalURL} target="_blank" rel="noopener noreferrer">
-            {originalURL}
-          </a>
-        </p>
-      )}
     </div>
   );
 };

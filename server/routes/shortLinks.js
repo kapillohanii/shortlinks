@@ -25,7 +25,7 @@ router.get('/dashboard', async (req, res) => {
   }
 });
 
-router.get('/shortlinks/:token', async (req, res) => {
+router.get('/links/:token', async (req, res) => {
   const token = req.params.token;
   try {
     const link = await ShortLink.findOne({ token });
