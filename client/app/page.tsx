@@ -62,6 +62,7 @@ export default function Home() {
       } else {
         // Login failed, handle the error
         const errorData = await response.json();
+        setIsLoading(false);
         alert(`Login failed: ${errorData.message}`);
       }
     } catch (error) {

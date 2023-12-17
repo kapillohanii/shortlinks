@@ -12,19 +12,18 @@ export default function DashboardLayout({ children }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    Router.events.on("routeChangeStart", (url)=>{
-      setIsLoading(true)
+    Router.events.on("routeChangeStart", () => {
+      setIsLoading(true);
     });
 
-    Router.events.on("routeChangeComplete", (url)=>{
-      setIsLoading(false)
+    Router.events.on("routeChangeComplete", () => {
+      setIsLoading(false);
     });
 
-    Router.events.on("routeChangeError", (url) =>{
-      setIsLoading(false)
+    Router.events.on("routeChangeError", () => {
+      setIsLoading(false);
     });
-
-  }, [Router])
+  }, [Router]);
 
   useEffect(() => {
     // Fetch the username from localStorage on the client side
@@ -42,12 +41,12 @@ export default function DashboardLayout({ children }) {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
       });
 
       if (response.ok) {
         // Redirect to the login page after successful logout
-        localStorage.removeItem('User');
+        localStorage.removeItem("User");
         setUsername("");
         router.push("/");
       } else {
@@ -61,29 +60,34 @@ export default function DashboardLayout({ children }) {
   };
 
   return (
-    <>{isLoading && <Loader />}
-    <div className="h-full w-full relative bg-gray-200 p-2">
-      <aside className="absolute w-[200px] top-0 left-0 h-full border-r border-black/10">
-        <Link href="/dashboard">
-        <h1 className="text-5xl text-blue-950 mb-4 font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-emerald-800 from-sky-400">Short Links</h1>
-        </Link>
-      </aside>
-      <div className="ml-[200px] h-full">
-        <header className="h-[60px] border-b border-black/10">
-          <div className="h-full w-full flex items-center justify-end">
-            user: <h1 className="text-blue-400 mr-3 ml-1"> {username}</h1>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
-            >
-              Log Out
-            </button>
-          </div>
-        </header>
-        <div className="h-[calc(100vh-60px)]">{children}</div>
+    <>
+      {isLoading && <Loader />}
+      <div className="h-full w-full relative bg-gray-200 p-2">
+        <aside className="absolute w-full sm:w-[200px] top-0 left-0 h-[60px] sm:h-full border-b sm:border-r border-black/10">
+          <Link href="/dashboard">
+            <h1 className="text-5xl sm:text-5xl text-blue-950 mb-4 font-extrabold text-transparent bg-clip-text bg-gradient-to-r to-emerald-800 from-sky-400">
+              Short Links
+            </h1>
+          </Link>
+        </aside>
+        <div className="mt-[60px] sm:ml-[200px] h-full">
+          <header className="h-[40px] sm:h-[40px] border-b border-black/10">
+            <div className="h-full w-full flex items-center justify-end">
+              <div className="flex items-center">
+                user: <h1 className="text-blue-400 ml-1 mr-2"> {username}</h1>
+              </div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 mb-2"
+              >
+                Log Out
+              </button>
+            </div>
+          </header>
+          <div className="h-[calc(100vh-120px)]">{children}</div>
+        </div>
       </div>
-    </div>
     </>
   );
 }
