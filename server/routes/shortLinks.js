@@ -6,7 +6,10 @@ const router = express.Router();
 
 router.get('/dashboard', async (req, res) => {
     try {
-        const userShortLinks = await ShortLink.find({ user: req.user._id });
+        const userShortLinks = await ShortLink.find({ user: req.user._id }) || [];
+        if (!userShortLinks.length) {
+          return res.json({ user: req.user, links: [] }); // Send empty links array if no short links found
+        }
         const linkAnalytics = userShortLinks.map(link => ({
             token: link.token,
             originalURL: link.originalURL,
