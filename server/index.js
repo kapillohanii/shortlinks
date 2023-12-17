@@ -24,11 +24,6 @@ const redisClient = redis.createClient({
 redisClient.connect().catch(console.error);
 
 
-
-let redisStore = new RedisStore({
-  client: redisClient,
-});
-
 mongoose.connect(uri, {});
 const connection = mongoose.connection;
 connection.once('open', () => {
@@ -43,14 +38,27 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({
-  store: redisStore,
+const sessionConfig = {
+  store: new RedisStore({
+    client: redisClient,
+  }),
   secret: process.env.SECRET_KEY, resave: false, saveUninitialized: false,
   cookie: {
-    sameSite: 'None', // Allow cross-site cookies
-    secure: true, // Ensure cookies are sent only over HTTPS
+    sameSite: 'Lax', // Allow cross-site cookies
+    secure: false,
   }
-}));
+};
+
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1); // trust first proxy
+  sessionConfig.cookie.secure = true; // serve secure cookies
+  sessionConfig.cookie.sameSite = 'None'
+}
+
+app.use(session(sessionConfig));
+
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 
