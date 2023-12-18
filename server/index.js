@@ -46,14 +46,14 @@ const sessionConfig = {
   cookie: {
     sameSite: 'Lax', // Allow cross-site cookies
     secure: false,
-    maxAge: 6 * 60 * 60 * 1000,
   }
 };
 
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1); // trust first proxy
   sessionConfig.cookie.secure = true; // serve secure cookies
-  sessionConfig.cookie.sameSite = 'None'
+  sessionConfig.cookie.sameSite = 'None';
+
 }
 
 app.use(session(sessionConfig));
