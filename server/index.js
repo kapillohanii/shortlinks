@@ -42,10 +42,11 @@ const sessionConfig = {
   store: new RedisStore({
     client: redisClient,
   }),
-  secret: process.env.SECRET_KEY, resave: false, saveUninitialized: false,
+  secret: process.env.SECRET_KEY, resave: false, saveUninitialized: true,
   cookie: {
     sameSite: 'Lax', // Allow cross-site cookies
     secure: false,
+    maxAge: 6 * 60 * 60 * 1000,
   }
 };
 
