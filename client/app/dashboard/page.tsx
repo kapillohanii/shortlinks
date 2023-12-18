@@ -7,6 +7,7 @@ import moment from 'moment-timezone';  // Import moment from moment-timezone
 import { useRouter } from 'next/navigation';
 import Router from 'next/router';
 import Loader from '../components/Loading';
+import CookieError from '../components/CookieError';
 interface Link {
   token: string;
   originalURL: string;
@@ -18,6 +19,7 @@ const Dashboard = () => {
   const [user, setUser] = useState({});
   const [links, setLinks] = useState<Link[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isCookieError, setIsCookieError] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -38,6 +40,7 @@ const Dashboard = () => {
         setLinks(data.links);
       } catch (error) {
         console.error('Error fetching short links:', error);
+        setIsCookieError(true);
         // Handle the error as needed, for example, you can set an error state
         // setError(error.message);
       }
@@ -98,7 +101,7 @@ const Dashboard = () => {
   };
 
   return (
-    <>{isLoading && <Loader />}
+    <>{isLoading && <Loader />}{isCookieError && <CookieError />}
     <div className='m-2'>
       <CreateLink onCreate={handleCreateLink} />
       <h1 className='text-2xl font-bold mb-4 text-gray-800'>Dashboard</h1>
